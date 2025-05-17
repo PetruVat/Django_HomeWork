@@ -16,8 +16,21 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, include
+from myapp.views import (
+    TaskCreateView,
+    TaskDetailView,
+    TaskStatisticsView,
+    SubTaskListCreateView,
+    SubTaskDetailUpdateDeleteView,
+)
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', include('myapp.urls')),
+    # path('api/tasks/', TaskListView.as_view(), name='task-list'),
+    path('api/tasks/create/', TaskCreateView.as_view(), name='task-create'),
+    path('api/tasks/<int:pk>/', TaskDetailView.as_view(), name='task-detail'),
+    path('api/tasks/statistics/', TaskStatisticsView.as_view(), name='task-statistics'),
+    path('api/subtasks/', SubTaskListCreateView.as_view(), name='subtask-list-create'),
+    path('api/subtasks/<int:pk>/', SubTaskDetailUpdateDeleteView.as_view(), name='subtask-detail-update-delete'),
 ]
