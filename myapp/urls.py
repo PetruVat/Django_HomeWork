@@ -1,17 +1,19 @@
 from django.urls import path
 from myapp.views import (
-    hello,
-    TaskListByDayAPIView,
-    PaginatedSubTaskListView,
-    FilteredSubTaskListView
-
+    TaskListCreateView,
+    TaskRetrieveUpdateDestroyView,
+    TaskStatisticsView,
+    SubTaskListCreateView,
+    SubTaskRetrieveUpdateDestroyView,
 )
 
-
 urlpatterns = [
-    path('', hello, name='hello'),
-    path('tasks/by-day/', TaskListByDayAPIView.as_view(), name='task-list-by-day'),
-    path('subtasks/paginated/', PaginatedSubTaskListView.as_view(), name='paginated-subtask-list'),
-    path('subtasks/filter/', FilteredSubTaskListView.as_view(), name='filtered-subtask-list'),
+    # Задачи (Tasks)
+    path('tasks/', TaskListCreateView.as_view(), name='task-list-create'),
+    path('tasks/<int:pk>/', TaskRetrieveUpdateDestroyView.as_view(), name='task-retrieve-update-destroy'),
+    path('tasks/statistics/', TaskStatisticsView.as_view(), name='task-statistics'),
 
+    # Подзадачи (SubTasks)
+    path('subtasks/', SubTaskListCreateView.as_view(), name='subtask-list-create'),
+    path('subtasks/<int:pk>/', SubTaskRetrieveUpdateDestroyView.as_view(), name='subtask-retrieve-update-destroy'),
 ]

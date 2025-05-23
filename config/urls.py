@@ -1,36 +1,28 @@
-"""
-URL configuration for config project.
-
-The `urlpatterns` list routes URLs to views. For more information please see:
-    https://docs.djangoproject.com/en/5.2/topics/http/urls/
-Examples:
-Function views
-    1. Add an import:  from my_app import views
-    2. Add a URL to urlpatterns:  path('', views.home, name='home')
-Class-based views
-    1. Add an import:  from other_app.views import Home
-    2. Add a URL to urlpatterns:  path('', Home.as_view(), name='home')
-Including another URLconf
-    1. Import the include() function: from django.urls import include, path
-    2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
-"""
 from django.contrib import admin
 from django.urls import path, include
 from myapp.views import (
-    TaskCreateView,
-    TaskDetailView,
+    TaskListCreateView,  # Импорт вместо TaskCreateView
+    TaskRetrieveUpdateDestroyView,  # Этот заменяет TaskDetailView
     TaskStatisticsView,
     SubTaskListCreateView,
-    SubTaskDetailUpdateDeleteView,
+    SubTaskRetrieveUpdateDestroyView,  # Этот заменяет SubTaskDetailUpdateDeleteView
 )
 
 urlpatterns = [
+    # Админ панель
     path('admin/', admin.site.urls),
+
+    # Подключение маршрутов приложения "myapp"
     path('', include('myapp.urls')),
-    # path('api/tasks/', TaskListView.as_view(), name='task-list'),
-    path('api/tasks/create/', TaskCreateView.as_view(), name='task-create'),
-    path('api/tasks/<int:pk>/', TaskDetailView.as_view(), name='task-detail'),
+
+    # Маршруты для задач
+    path('api/tasks/', TaskListCreateView.as_view(), name='task-list-create'),  # Исправлено
+    path('api/tasks/<int:pk>/', TaskRetrieveUpdateDestroyView.as_view(), name='task-retrieve-update-destroy'),
+    # Исправлено
     path('api/tasks/statistics/', TaskStatisticsView.as_view(), name='task-statistics'),
+
+    # Маршруты для подзадач
     path('api/subtasks/', SubTaskListCreateView.as_view(), name='subtask-list-create'),
-    path('api/subtasks/<int:pk>/', SubTaskDetailUpdateDeleteView.as_view(), name='subtask-detail-update-delete'),
+    path('api/subtasks/<int:pk>/', SubTaskRetrieveUpdateDestroyView.as_view(), name='subtask-retrieve-update-destroy'),
+    # Исправлено
 ]
