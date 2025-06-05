@@ -1,3 +1,6 @@
+from django.contrib.auth.models import User
+from django.contrib.auth.password_validation import validate_password
+from django.core.validators import validate_email
 from rest_framework import serializers
 from myapp.models import Category, Task, SubTask
 
@@ -23,8 +26,6 @@ class TaskSerializer(serializers.ModelSerializer):
     class Meta:
         model = Task
         fields = [
-            'id',
-            'owner',
             'title',
             'description',
             'categories',
@@ -51,3 +52,27 @@ class SubTaskSerializer(serializers.ModelSerializer):
             'created_at',
         ]
         read_only_fields = ['created_at', 'owner']
+
+
+class UserRegistrationSerializer(serializers.Serializer):
+    """Serializer for validating user registration data."""
+
+    username = serializers.CharField(max_length=150)
+    email = serializers.EmailField()
+    password = serializers.CharField(write_only=True)
+
+    def validate_username(self, value):
+        if User.objects.filter(username=value).exists():
+            raise serializers.ValidationError('A user with that username already exists.')
+        return value
+
+    def validate_email(self, value):
+        # EmailField already checks for valid format but we also ensure uniqueness
+        validate_email(value)
+        if User.objects.filter(email=value).exists():
+            raise serializers.ValidationError('A user with that email already exists.')
+        return value
+
+    def validate_password(self, value):
+        validate_password(value)
+        return value
