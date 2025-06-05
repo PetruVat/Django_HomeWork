@@ -1,5 +1,6 @@
 from django.db import models
 from django.utils.timezone import now
+from django.contrib.auth.models import User
 
 # Create your models here.
 
@@ -60,7 +61,8 @@ class Category(models.Model):
 class Task(models.Model):
     title = models.CharField(max_length=50, unique_for_date="deadline")
     description = models.TextField()
-    categories = models.ManyToManyField(Category)
+    categories = models.ManyToManyField(Category, blank=True)
+    owner = models.ForeignKey(User, on_delete=models.CASCADE, default=1)
     status = models.CharField(max_length=100, choices=status_choises)
     deadline = models.DateTimeField()
     created_at = models.DateTimeField(auto_now_add=True)
@@ -79,6 +81,7 @@ class SubTask(models.Model):
     title = models.CharField(max_length=50)
     description = models.TextField()
     task = models.ForeignKey(Task, on_delete=models.CASCADE)
+    owner = models.ForeignKey(User, on_delete=models.CASCADE, null=True, blank=True)
     status = models.CharField(max_length=100, choices=status_choises)
     deadline = models.DateTimeField()
     created_at = models.DateTimeField(auto_now_add=True)
