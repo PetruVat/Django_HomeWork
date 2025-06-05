@@ -18,7 +18,7 @@ class CategoryViewSet(viewsets.ModelViewSet):
         Кастомный метод для подсчета количества задач в категории.
         """
         category = self.get_object()
-        task_count = Task.objects.filter(category=category, is_deleted=False).count()
+        task_count = Task.objects.filter(categories=category).count()
         return Response({'category': category.name, 'task_count': task_count})
 
     def perform_destroy(self, instance):

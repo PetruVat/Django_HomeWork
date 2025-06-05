@@ -15,8 +15,7 @@ urlpatterns = [
     # Админ панель
     path('admin/', admin.site.urls),
 
-    # Подключение дополнительных маршрутов из приложения (если нужно)
-    path('', include('myapp.urls')),
+
 
     # JWT токены
     path('api/token/', TokenObtainPairView.as_view(), name='token_obtain_pair'),
