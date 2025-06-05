@@ -41,6 +41,7 @@ class CookieTokenObtainPairView(TokenObtainPairView):
                 secure=True,
                 samesite="Lax",
             )
+            response.data = {}
         return response
 
 
@@ -74,6 +75,7 @@ class CookieTokenRefreshView(TokenRefreshView):
                     secure=True,
                     samesite="Lax",
                 )
+                response.data = {}
         return response
 
 
@@ -156,6 +158,11 @@ class LogoutView(APIView):
     def post(self, request):
         token = request.data.get('refresh')
         if not token:
+            try:
+                token = request.COOKIES['refresh']
+            except KeyError:
+                token = None
+        if not token:
             return Response({'detail': 'Refresh token not provided'}, status=status.HTTP_400_BAD_REQUEST)
 
         try:
@@ -165,4 +172,5 @@ class LogoutView(APIView):
 
         response = Response({'detail': 'Logout successful'}, status=status.HTTP_205_RESET_CONTENT)
         response.delete_cookie('refresh')
+        response.delete_cookie('access')
         return response
